@@ -1,29 +1,39 @@
-const express=require('express')
-const bodyparser=require('body-parser')
-const cors =require('cors')
-const mongoose=require('mongoose')
+const express = require("express");
+const bodyparser = require("body-parser");
+const cors = require("cors");
+const mongoose = require("mongoose");
 
-const app=express();
+const app = express();
 
+/* ---------- MIDDLEWARE ---------- */
 app.use(cors());
-app.use(bodyparser.json())
-const customerroutes=require("./routes/customer");
-const routesroute=require("./routes/route");
-const bookingroute=require("./routes/booking")
-app.use(bookingroute)
-app.use(routesroute)
-app.use(customerroutes)
+app.use(bodyparser.json());
 
-const DBURL="mongodb+srv://admin:admin@tedbus.vqk1yid.mongodb.net/?retryWrites=true&w=majority&appName=tedbus"
-mongoose.connect(DBURL)
-.then(()=> console.log("Mongodb connected"))
-.catch(err=> console.error('Mongodb connection error:' ,err))
+/* ---------- ROUTES ---------- */
+const customerRoutes = require("./routes/customer");
+const routeRoutes = require("./routes/route");
+const bookingRoutes = require("./routes/booking");
+const busRoutes = require("./routes/bus"); 
+app.use("/api/customer", customerRoutes);
+app.use("/api/routes", routeRoutes);
+app.use("/api/booking", bookingRoutes);
+app.use("/api/bus", busRoutes); 
 
-app.get('/',(req,res)=>{
-    res.send('Hello , Ted bus is working')
-})
+/* ---------- DATABASE ---------- */
+const DBURL =
+  "mongodb+srv://redbus_user:redbus_pass123@redbus.koe7zh1.mongodb.net/redbus?retryWrites=true&w=majority&appName=Redbus"
+mongoose
+  .connect(DBURL)
+  .then(() => console.log("Mongodb connected"))
+  .catch((err) => console.error("Mongodb connection error:", err));
 
-const PORT= 5000
-app.listen(PORT,()=>{
-    console.log(`server is running on port ${PORT}`)
-})
+/* ---------- TEST ROUTE ---------- */
+app.get("/", (req, res) => {
+  res.send("Redbus backend working");
+});
+
+/* ---------- SERVER ---------- */
+const PORT = 5000;
+app.listen(PORT, () => {
+  console.log(`server is running on port ${PORT}`);
+});
